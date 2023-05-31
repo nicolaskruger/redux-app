@@ -1,10 +1,12 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 
-import { userReducer } from "./features/user/userSlicer";
+import { userReducer } from "./features/user/userSlice";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { loginReducer } from "./features/login/loginSlice";
 
 export function makeStore() {
   return configureStore({
-    reducer: { user: userReducer },
+    reducer: { user: userReducer, login: loginReducer },
   });
 }
 
@@ -22,3 +24,6 @@ export type AppThunk<ReturnType = void> = ThunkAction<
 >;
 
 export default store;
+
+export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useAppSelector: TypedUseSelectorHook<AppState> = useSelector;

@@ -1,0 +1,28 @@
+.form {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    gap: 20px;
+}
+
+.label,.input, .button, .label2 {
+    width: 100%;
+}
+.button{
+    cursor: pointer;
+}
+
+.label2 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.error {
+    color: red;
+    margin: 0;
+    visibility: hidden;
+}

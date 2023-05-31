@@ -1,4 +1,4 @@
-import { User } from "./userSlicer";
+import { User } from "./userSlice";
 
 export const USERS: User[] = [
   {

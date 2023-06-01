@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectUserByEmailAndPassword } from "../../../features/user/userSlice";
 import { loginWithUser } from "../../../features/login/loginSlice";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
@@ -67,6 +68,9 @@ export const Login = () => {
       <button data-testid="button-login" className={styles.button}>
         login
       </button>
+      <Link className={styles.link} href={"/register"}>
+        register
+      </Link>
       <p style={{ visibility }} className={styles.error}>
         email or password incorrect !
       </p>

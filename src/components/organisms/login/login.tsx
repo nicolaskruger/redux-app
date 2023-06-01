@@ -44,12 +44,14 @@ export const Login = () => {
         onChange={(e) => setEmail(e.target.value)}
         id="email"
         type="text"
+        data-testid="input-email"
       />
       <label className={styles.label2} htmlFor="password">
         password:
         <button
           onClick={() => setHide(hide === "password" ? "text" : "password")}
           type="button"
+          data-testid="button-hide-password"
         >
           {hide === "password" ? "show" : "hide"}
         </button>
@@ -60,8 +62,11 @@ export const Login = () => {
         onChange={(e) => setPassword(e.target.value)}
         type={hide}
         id="password"
+        data-testid="input-password"
       />
-      <button className={styles.button}>login</button>
+      <button data-testid="button-login" className={styles.button}>
+        login
+      </button>
       <p style={{ visibility }} className={styles.error}>
         email or password incorrect !
       </p>

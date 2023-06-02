@@ -5,6 +5,7 @@ import { useAppDispatch } from "../../../store";
 import { addUser, selectUserByEmail } from "../../../features/user/userSlice";
 import { useSelector } from "react-redux";
 import { useVisibility } from "../../../hooks/visibility";
+import styles from "./register.module.css";
 
 const Register = () => {
   const selector = useState("");
@@ -72,7 +73,8 @@ const Register = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} action="submit">
+    <form className={styles.form} onSubmit={handleSubmit} action="submit">
+      <h1>Register</h1>
       <label htmlFor="name">name:</label>
       <input
         type="text"
@@ -90,11 +92,13 @@ const Register = () => {
         onChange={handleChange(setEmail)}
       />
       <label
+        className={styles.labelPassword}
         htmlFor="pass
       word"
       >
         password:{" "}
         <button
+          className={styles.button}
           type="button"
           onClick={() => setHidePassword(!hidePassword)}
           data-testid="button-hide"
@@ -111,8 +115,10 @@ const Register = () => {
       />
       <label>img:</label>
       <SelectImage selector={selector} />
-      <button data-testid="button-register">submit</button>
-      <p style={{ visibility }} data-testid="error">
+      <button className={styles.button} data-testid="button-register">
+        submit
+      </button>
+      <p className={styles.p} style={{ visibility }} data-testid="error">
         {errorMessage()}
       </p>
     </form>

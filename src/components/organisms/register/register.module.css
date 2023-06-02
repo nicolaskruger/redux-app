@@ -1,0 +1,17 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    gap: 20px;
+}
+.button {
+    cursor: pointer;
+}
+.labelPassword{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.p{
+    color: red;
+}

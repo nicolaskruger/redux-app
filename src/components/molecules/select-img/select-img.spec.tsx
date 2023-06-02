@@ -2,6 +2,10 @@ import { render, screen } from "@testing-library/react";
 import { SelectImage } from "./select-img";
 import { IMG_URL } from "./constants";
 import user from "@testing-library/user-event";
+import axios from "axios";
+import MockAdapter from "axios-mock-adapter";
+
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 describe("<SelectImg/>", () => {
   let img = "img";
@@ -13,8 +17,11 @@ describe("<SelectImg/>", () => {
     },
   ];
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    const mock = new MockAdapter(axios);
+    mock.onGet("/api/avatars").reply(200, IMG_URL);
     render(<SelectImage selector={select} />);
+    await delay(2000);
   });
 
   it("render the component", () => {

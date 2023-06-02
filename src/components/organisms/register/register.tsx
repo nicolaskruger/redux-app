@@ -79,7 +79,7 @@ const Register = () => {
 
   return (
     <form className={styles.form} onSubmit={handleSubmit} action="submit">
-      <h1>Register</h1>
+      <h1>Register:</h1>
       <label htmlFor="name">name:</label>
       <input
         type="text"

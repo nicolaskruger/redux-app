@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import styles from "./login.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUserByEmailAndPassword } from "../../../features/user/userSlice";
@@ -10,11 +10,17 @@ export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { push } = useRouter();
+  const {
+    push,
+    query: { email: initialEmail },
+  } = useRouter();
 
   const dispatch = useDispatch();
 
   const [visibility, setVisibility] = useState<"visible" | "hidden">("hidden");
+  useEffect(() => {
+    setEmail(initialEmail as string);
+  }, []);
 
   const selectedUser = useSelector(
     selectUserByEmailAndPassword(email, password)

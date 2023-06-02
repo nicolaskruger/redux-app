@@ -66,7 +66,12 @@ const Register = () => {
           url,
         })
       );
-      push("/", { query: { email } });
+      push({
+        pathname: "/",
+        query: {
+          email,
+        },
+      });
     } else {
       toggleVisibility();
     }

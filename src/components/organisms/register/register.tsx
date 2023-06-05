@@ -84,7 +84,7 @@ const Register = () => {
       <input
         type="text"
         id="name"
-        date-testid="input-name"
+        data-testid="input-name"
         value={name}
         onChange={handleChange(setName)}
       />

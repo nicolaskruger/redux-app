@@ -4,8 +4,26 @@ import { makeStore } from "../../../store";
 import mockRouter from "next-router-mock";
 import user from "@testing-library/user-event";
 import { Register } from "./register";
+import { useEffect } from "react";
 
 jest.mock("next/router", () => require("next-router-mock"));
+
+type SelectImageMockProps = {
+  selector: [string, (value: string) => void];
+};
+
+jest.mock("../../molecules/select-img/select-img", () => ({
+  __esModule: true,
+  SelectImage: ({ selector }: SelectImageMockProps) => {
+    const [img, setImg] = selector;
+
+    useEffect(() => {
+      setImg("mock");
+    }, []);
+
+    return <p>{img}</p>;
+  },
+}));
 
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
@@ -16,11 +34,11 @@ type FetchInfoProps = {
 };
 
 const fetchInfo = ({ name, email, password }: FetchInfoProps) => {
-  const inputName = screen.getByTestId<HTMLInputElement>("input-password");
+  const inputName = screen.getByTestId<HTMLInputElement>("input-name");
   const inputPassword = screen.getByTestId<HTMLInputElement>("input-password");
   const inputEmail = screen.getByTestId<HTMLInputElement>("input-email");
   const button = screen.getByTestId<HTMLButtonElement>("button-register");
-  const p = screen.getByText<HTMLParagraphElement>("-");
+  const p = screen.getByTestId<HTMLParagraphElement>("error");
 
   user.type(inputName, name);
   user.type(inputEmail, email);
@@ -68,11 +86,11 @@ describe("<Register/>", () => {
       password: "123",
     });
     expect(p.style.visibility).toBe("hidden");
-
     user.click(button);
-
     expect(p.style.visibility).toBe("visible");
-    expect(p.innerText).toBe("email already in use !");
+    expect(p.textContent).toBe(
+      "you have the follow errors: email already in use."
+    );
 
     await delay(4000);
 
@@ -87,6 +105,8 @@ describe("<Register/>", () => {
     });
     user.click(button);
 
-    expect(mockRouter.asPath).toBe("/");
+    expect(mockRouter.pathname).toBe("/");
+
+    expect(mockRouter.query.email).toBe("mamimi@email.com");
   });
 });

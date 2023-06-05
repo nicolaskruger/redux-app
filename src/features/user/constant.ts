@@ -11,7 +11,7 @@ export const USERS: User[] = [
   {
     name: "Aiko Tanaka",
     email: "aikoTanaka@email.com",
-    id: "punpun",
+    id: "aiko",
     password: "123",
     url: "/user/aiko.png",
   },

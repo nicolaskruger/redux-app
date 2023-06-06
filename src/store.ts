@@ -3,10 +3,11 @@ import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import { userReducer } from "./features/user/userSlice";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { loginReducer } from "./features/login/loginSlice";
+import { postReducer } from "./features/post/postiSlicer";
 
 export function makeStore() {
   return configureStore({
-    reducer: { user: userReducer, login: loginReducer },
+    reducer: { user: userReducer, login: loginReducer, post: postReducer },
   });
 }
 

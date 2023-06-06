@@ -16,7 +16,7 @@ export type User = {
   url: string;
 };
 
-const userAdapter = createEntityAdapter<User>({
+export const userAdapter = createEntityAdapter<User>({
   selectId: ({ id }) => id,
 });
 

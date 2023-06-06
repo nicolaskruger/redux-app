@@ -7,6 +7,7 @@ import {
   nanoid,
 } from "@reduxjs/toolkit";
 import { Reactions } from "./constants";
+import { User } from "../user/userSlice";
 
 type ReactionContent = {
   heart: string[];
@@ -20,6 +21,20 @@ export type Comment = ReactionContent & {
   text: string;
   date: string;
   userId: string;
+};
+
+export type ReactionView = {
+  emoji: string;
+  times: number;
+  reaction: Reactions;
+};
+
+export type CommentView = {
+  id: string;
+  text: string;
+  date: string;
+  reactions: ReactionView[];
+  postId: string;
 };
 
 export type Post = ReactionContent & {
@@ -144,3 +159,8 @@ const postSlicer = createSlice({
     },
   },
 });
+
+export const { addComment, addPost, commentReaction, reaction } =
+  postSlicer.actions;
+
+export const postReducer = postSlicer.reducer;

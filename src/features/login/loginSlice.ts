@@ -1,5 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { User } from "../user/userSlice";
+import { User, userAdapter } from "../user/userSlice";
+import { AppState } from "../../store";
 
 type Login = {
   id?: string;
@@ -29,3 +30,6 @@ export const loginSlice = createSlice({
 export const { reducer: loginReducer } = loginSlice;
 
 export const { loginWithId, loginWithUser } = loginSlice.actions;
+
+export const selectLoginUser = (state: AppState) =>
+  userAdapter.getSelectors().selectById(state.user, state.login.id as string);

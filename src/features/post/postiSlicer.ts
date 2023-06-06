@@ -6,8 +6,9 @@ import {
   createSlice,
   nanoid,
 } from "@reduxjs/toolkit";
-import { Reactions } from "./constants";
+import { Reactions, reactions } from "./constants";
 import { User } from "../user/userSlice";
+import { AppState } from "../../store";
 
 type ReactionContent = {
   heart: string[];
@@ -159,6 +160,37 @@ const postSlicer = createSlice({
     },
   },
 });
+
+const commentToCommentView = (
+  comment: Comment,
+  postId: string
+): CommentView => ({
+  ...comment,
+  postId,
+  reactions: (["cigaret", "fire", "like", "heart"] as Reactions[]).map(
+    (key) => ({
+      emoji: reactions[key],
+      reaction: key,
+      times: comment[key].length,
+    })
+  ),
+});
+
+export const selectCommentViewById =
+  (commentId: string, postId: string) => (state: AppState) => {
+    const post = postAdapter
+      .getSelectors()
+      .selectById(state.post.posts, postId);
+    if (!post) return null;
+
+    const comment = commentAdapter
+      .getSelectors()
+      .selectById(post?.comments, commentId);
+
+    if (!comment) return null;
+
+    return commentToCommentView(comment, postId);
+  };
 
 export const { addComment, addPost, commentReaction, reaction } =
   postSlicer.actions;

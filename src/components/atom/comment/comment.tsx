@@ -2,18 +2,24 @@ import { formatDistance } from "date-fns";
 import {
   CommentView,
   commentReaction,
+  selectCommentViewById,
 } from "../../../features/post/postiSlicer";
 import { Reactions } from "../../../features/post/constants";
 import { useDispatch, useSelector } from "react-redux";
-import { MouseEvent, MouseEventHandler } from "react";
+import { MouseEvent } from "react";
 import { selectLoginUser } from "../../../features/login/loginSlice";
 
 type CommentComponentProps = {
-  comment: CommentView;
+  commentId: string;
+  postId: string;
 };
 
-const CommentComponent = ({ comment }: CommentComponentProps) => {
-  const { date, reactions, text, id, postId } = comment;
+const CommentComponent = ({ commentId, postId }: CommentComponentProps) => {
+  const comment = useSelector(selectCommentViewById(commentId, postId));
+
+  if (!comment) return <p>post not exist</p>;
+
+  const { date, reactions, text, id } = comment;
 
   const user = useSelector(selectLoginUser);
 
@@ -43,8 +49,8 @@ const CommentComponent = ({ comment }: CommentComponentProps) => {
       <p>{text}</p>
       <p>{formatDistance(new Date(date), new Date(), { addSuffix: true })}</p>
       <div>
-        <img src={url} alt={name} />
-        <p>{name}</p>
+        <img data-testid="img-comment-user" src={url} alt={name} />
+        <p data-testid="p-comment-user-name">{name}</p>
       </div>
       <ul>
         {reactions.map(({ emoji, times, reaction }) => (
@@ -53,7 +59,7 @@ const CommentComponent = ({ comment }: CommentComponentProps) => {
               data-testid={`button-comment-${reaction}`}
               onClick={handleClickReaction(reaction)}
             >
-              {emoji}' '{times}
+              {emoji} {times}
             </button>
           </li>
         ))}

@@ -5,7 +5,7 @@ import { subDays } from "date-fns";
 
 export type Reactions = "heart" | "like" | "cigaret" | "fire";
 
-const reactions: Map<Reactions, string> = {
+export const reactions: Map<Reactions, string> = {
   heart: "🖤",
   fire: "🔥",
   like: "👍",

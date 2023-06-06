@@ -101,6 +101,7 @@ const postSlicer = createSlice({
         showSize: 5,
       };
       postAdapter.addOne(state.posts, newPost);
+      return { ...state };
     },
     reaction: (state, action: PayloadAction<ToggleReaction>) => {
       const { postId, reaction, userId } = action.payload;
@@ -116,6 +117,7 @@ const postSlicer = createSlice({
       } else {
         reactions.push(userId);
       }
+      return { ...state };
     },
     addComment: (state, action: PayloadAction<AddComment>) => {
       const { postId, text, userId } = action.payload;
@@ -136,6 +138,7 @@ const postSlicer = createSlice({
       if (!post) return;
 
       commentAdapter.addOne(post.comments, newComment);
+      return { ...state };
     },
     commentReaction: (state, action: PayloadAction<CommentReaction>) => {
       const { postId, reaction, userId, commentId } = action.payload;
@@ -157,6 +160,7 @@ const postSlicer = createSlice({
       } else {
         comment[reaction].push(userId);
       }
+      return { ...state };
     },
   },
 });

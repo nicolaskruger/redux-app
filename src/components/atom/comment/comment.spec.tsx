@@ -110,45 +110,4 @@ describe("<CommentComponent/>", () => {
     expect(p).toBeInTheDocument();
     expect(p.textContent).toBe("post not exist!!!");
   });
-  it("error when comment not exists", async () => {
-    const store = makeStore();
-
-    store.dispatch(
-      addPost({
-        text: "text",
-        userId: "punpun",
-      })
-    );
-
-    const post = postAdapter
-      .getSelectors()
-      .selectAll(store.getState().post.posts)[0];
-
-    if (!post) throw new Error("don't have a post");
-
-    store.dispatch(
-      addComment({
-        postId: post.id,
-        text: "oi",
-        userId: "punpun",
-      })
-    );
-
-    const comment = commentAdapter
-      .getSelectors()
-      .selectAll(store.getState().post.comment)[0];
-
-    if (!comment) throw new Error("don't have a comment");
-
-    render(
-      <Provider store={store}>
-        <CommentComponent commentId={comment.id} />
-      </Provider>
-    );
-
-    const p = screen.getByTestId<HTMLParagraphElement>("p-comment-error");
-
-    expect(p).toBeInTheDocument();
-    expect(p.textContent).toBe("user not logged!!!");
-  });
 });

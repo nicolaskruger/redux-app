@@ -18,8 +18,6 @@ const CommentComponent = ({ commentId }: CommentComponentProps) => {
 
   const { date, reactions, text, id, user } = comment;
 
-  if (!user) return <p data-testid="p-comment-error">user not logged!!!</p>;
-
   const { name, url } = user;
 
   const dispatch = useDispatch();

@@ -7,6 +7,7 @@ import {
 } from "@reduxjs/toolkit";
 import { Reactions, reactions } from "./constants";
 import { AppState } from "../../store";
+import { User, userAdapter } from "../user/userSlice";
 
 type ReactionContent = {
   heart: string[];
@@ -42,6 +43,16 @@ export type Post = ReactionContent & {
   date: string;
   showSize: number;
   userId: string;
+};
+
+export type PostView = Omit<
+  Post,
+  "userId" | "showSize" | keyof ReactionContent
+> & {
+  user: User;
+  commentIds: string[];
+  showMore: boolean;
+  reactions: ReactionView[];
 };
 
 type Blog = {
@@ -109,9 +120,19 @@ const postSlicer = createSlice({
       const reactions = post[reaction];
 
       if (reactions.includes(userId)) {
-        post[reaction] = reactions.filter((user) => user != userId);
+        postAdapter.updateOne(state.posts, {
+          id: postId,
+          changes: {
+            [reaction]: reactions.filter((user) => user != userId),
+          },
+        });
       } else {
-        reactions.push(userId);
+        postAdapter.updateOne(state.posts, {
+          id: postId,
+          changes: {
+            [reaction]: [...reactions, userId],
+          },
+        });
       }
     },
     addComment: (state, action: PayloadAction<AddComment>) => {
@@ -130,6 +151,20 @@ const postSlicer = createSlice({
       };
 
       commentAdapter.addOne(state.comment, newComment);
+    },
+    showMoreComments: (state, action: PayloadAction<string>) => {
+      const postId = action.payload;
+
+      const post = postAdapter.getSelectors().selectById(state.posts, postId);
+
+      if (!post) return;
+
+      postAdapter.updateOne(state.posts, {
+        id: postId,
+        changes: {
+          showSize: post.showSize + 5,
+        },
+      });
     },
     commentReaction: (state, action: PayloadAction<CommentReaction>) => {
       const { reaction, userId, commentId } = action.payload;
@@ -157,6 +192,16 @@ const postSlicer = createSlice({
   },
 });
 
+const reactionContentToReactionView = (
+  content: ReactionContent
+): ReactionView[] => {
+  return (["cigaret", "fire", "like", "heart"] as Reactions[]).map((key) => ({
+    emoji: reactions[key],
+    reaction: key,
+    times: content[key].length,
+  }));
+};
+
 const commentToCommentView = (comment: Comment): CommentView => ({
   ...comment,
   reactions: (["cigaret", "fire", "like", "heart"] as Reactions[]).map(
@@ -179,7 +224,44 @@ export const selectCommentViewById =
     return commentToCommentView(comment);
   };
 
-export const { addComment, addPost, commentReaction, reaction } =
-  postSlicer.actions;
+export const {
+  addComment,
+  addPost,
+  commentReaction,
+  reaction,
+  showMoreComments,
+} = postSlicer.actions;
 
 export const postReducer = postSlicer.reducer;
+
+export const selectPostViewById = (postId: string) => (state: AppState) => {
+  const { comment, posts } = state.post;
+
+  const { user } = state;
+
+  const currentPost = postAdapter.getSelectors().selectById(posts, postId);
+
+  if (!currentPost) return;
+
+  const postUser = userAdapter
+    .getSelectors()
+    .selectById(user, currentPost.userId);
+
+  if (!postUser) return;
+
+  const comments = commentAdapter
+    .getSelectors()
+    .selectAll(comment)
+    .filter((comment) => comment.postId === postId)
+    .map((comment) => comment.id);
+
+  const postView: PostView = {
+    ...currentPost,
+    user: postUser,
+    commentIds: comments.slice(0, currentPost.showSize),
+    showMore: currentPost.showSize < comments.length,
+    reactions: reactionContentToReactionView(currentPost),
+  };
+
+  return postView;
+};

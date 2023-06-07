@@ -54,6 +54,8 @@ describe("<PostComponent/>", () => {
   it("msg when post not found", () => {
     const store = makeStore();
 
+    store.dispatch(loginWithId("punpun"));
+
     render(
       <Provider store={store}>
         <PostComponent postId="0" />
@@ -86,19 +88,34 @@ describe("<PostComponent/>", () => {
 
     const input = screen.getByTestId("input-post-comment");
 
-    user.type(input, "comment");
+    user.type(input, "new comment add");
 
     const button = screen.getByTestId("button-post-comment");
 
     user.click(button);
 
-    const p = screen.getByText("comment");
+    const p = screen.getByText("new comment add");
 
     expect(p).toBeInTheDocument();
   });
 
   it("show more elements when click on show more", () => {
-    const { store, post } = renderPage();
+    const store = makeStore();
+
+    store.dispatch(
+      addPost({
+        text: "post",
+        userId: "punpun",
+      })
+    );
+
+    store.dispatch(loginWithId("punpun"));
+
+    const post = postAdapter
+      .getSelectors()
+      .selectAll(store.getState().post.posts)[0];
+
+    if (!post) throw new Error("post not found");
 
     "_"
       .repeat(6)
@@ -108,14 +125,21 @@ describe("<PostComponent/>", () => {
           addComment({ postId: post.id, text: "promise", userId: "aiko" })
         );
       });
+
+    render(
+      <Provider store={store}>
+        <PostComponent postId={post.id} />
+      </Provider>
+    );
+
     const button = screen.getByTestId<HTMLButtonElement>(
       "button-post-show-more"
     );
 
-    expect(screen.getAllByText("promise")).toBe(5);
+    expect(screen.getAllByText("promise").length).toBe(5);
 
     user.click(button);
 
-    expect(screen.getAllByText("promise")).toBe(6);
+    expect(screen.getAllByText("promise").length).toBe(6);
   });
 });

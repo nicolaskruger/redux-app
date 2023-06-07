@@ -65,3 +65,7 @@ export const selectUserByEmail = (email: string) => (state: AppState) =>
 export const selectUserByEmailAndPassword =
   (email: string, password: string) => (state: AppState) =>
     selectByEmailAndPassword(state, email, password);
+
+export const selectUserById = (id: string) => (state: AppState) => {
+  return userAdapter.getSelectors().selectById(state.user, id);
+};

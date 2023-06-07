@@ -1,13 +1,11 @@
 import { formatDistance } from "date-fns";
 import {
-  CommentView,
   commentReaction,
   selectCommentViewById,
 } from "../../../features/post/postSlicer";
 import { Reactions } from "../../../features/post/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { MouseEvent } from "react";
-import { selectLoginUser } from "../../../features/login/loginSlice";
 
 type CommentComponentProps = {
   commentId: string;
@@ -18,9 +16,7 @@ const CommentComponent = ({ commentId }: CommentComponentProps) => {
 
   if (!comment) return <p data-testid="p-comment-error">post not exist!!!</p>;
 
-  const { date, reactions, text, id } = comment;
-
-  const user = useSelector(selectLoginUser);
+  const { date, reactions, text, id, user } = comment;
 
   if (!user) return <p data-testid="p-comment-error">user not logged!!!</p>;
 

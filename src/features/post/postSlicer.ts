@@ -7,7 +7,7 @@ import {
 } from "@reduxjs/toolkit";
 import { Reactions, reactions } from "./constants";
 import { AppState } from "../../store";
-import { User, userAdapter } from "../user/userSlice";
+import { User, selectUserById, userAdapter } from "../user/userSlice";
 
 type ReactionContent = {
   heart: string[];
@@ -35,6 +35,7 @@ export type CommentView = {
   text: string;
   date: string;
   reactions: ReactionView[];
+  user: User;
 };
 
 export type Post = ReactionContent & {
@@ -202,8 +203,9 @@ const reactionContentToReactionView = (
   }));
 };
 
-const commentToCommentView = (comment: Comment): CommentView => ({
+const commentToCommentView = (comment: Comment, user: User): CommentView => ({
   ...comment,
+  user,
   reactions: (["cigaret", "fire", "like", "heart"] as Reactions[]).map(
     (key) => ({
       emoji: reactions[key],
@@ -221,7 +223,11 @@ export const selectCommentViewById =
 
     if (!comment) return null;
 
-    return commentToCommentView(comment);
+    const user = selectUserById(comment.userId)(state);
+
+    if (!user) return null;
+
+    return commentToCommentView(comment, user);
   };
 
 export const {

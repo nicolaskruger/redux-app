@@ -1,13 +1,28 @@
-import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
+import {
+  configureStore,
+  ThunkAction,
+  Action,
+  PreloadedState,
+  combineReducers,
+} from "@reduxjs/toolkit";
 
 import { userReducer } from "./features/user/userSlice";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { loginReducer } from "./features/login/loginSlice";
-import { postReducer } from "./features/post/postiSlicer";
+import { postReducer } from "./features/post/postSlicer";
 
-export function makeStore() {
+const rootReduce = combineReducers({
+  user: userReducer,
+  login: loginReducer,
+  post: postReducer,
+});
+
+type RootState = ReturnType<typeof rootReduce>;
+
+export function makeStore(preloadedState?: PreloadedState<RootState>) {
   return configureStore({
-    reducer: { user: userReducer, login: loginReducer, post: postReducer },
+    reducer: rootReduce,
+    preloadedState,
   });
 }
 

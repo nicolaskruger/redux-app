@@ -1,5 +1,4 @@
 import {
-  CreateSliceOptions,
   EntityState,
   PayloadAction,
   createEntityAdapter,
@@ -7,7 +6,6 @@ import {
   nanoid,
 } from "@reduxjs/toolkit";
 import { Reactions, reactions } from "./constants";
-import { User } from "../user/userSlice";
 import { AppState } from "../../store";
 
 type ReactionContent = {
@@ -22,6 +20,7 @@ export type Comment = ReactionContent & {
   text: string;
   date: string;
   userId: string;
+  postId: string;
 };
 
 export type ReactionView = {
@@ -35,7 +34,6 @@ export type CommentView = {
   text: string;
   date: string;
   reactions: ReactionView[];
-  postId: string;
 };
 
 export type Post = ReactionContent & {
@@ -43,27 +41,28 @@ export type Post = ReactionContent & {
   text: string;
   date: string;
   showSize: number;
-  comments: EntityState<Comment>;
   userId: string;
 };
 
 type Blog = {
   posts: EntityState<Post>;
+  comment: EntityState<Comment>;
   showSize: number;
 };
 
-const commentAdapter = createEntityAdapter<Comment>({
+export const commentAdapter = createEntityAdapter<Comment>({
   selectId: ({ id }) => id,
   sortComparer: (a, b) => b.date.localeCompare(a.date),
 });
 
-const postAdapter = createEntityAdapter<Post>({
+export const postAdapter = createEntityAdapter<Post>({
   selectId: ({ id }) => id,
   sortComparer: (a, b) => b.date.localeCompare(a.date),
 });
 
 const initialState: Blog = {
   posts: postAdapter.getInitialState(),
+  comment: commentAdapter.getInitialState(),
   showSize: 5,
 };
 
@@ -79,8 +78,7 @@ type AddComment = Pick<Comment, "text" | "userId"> & {
   postId: string;
 };
 
-type CommentReaction = ToggleReaction & {
-  postId: string;
+type CommentReaction = Omit<ToggleReaction, "postId"> & {
   commentId: string;
 };
 
@@ -92,7 +90,6 @@ const postSlicer = createSlice({
       const newPost: Post = {
         ...post.payload,
         cigaret: [],
-        comments: commentAdapter.getInitialState(),
         date: new Date().toISOString(),
         fire: [],
         heart: [],
@@ -101,7 +98,6 @@ const postSlicer = createSlice({
         showSize: 5,
       };
       postAdapter.addOne(state.posts, newPost);
-      return { ...state };
     },
     reaction: (state, action: PayloadAction<ToggleReaction>) => {
       const { postId, reaction, userId } = action.payload;
@@ -117,12 +113,12 @@ const postSlicer = createSlice({
       } else {
         reactions.push(userId);
       }
-      return { ...state };
     },
     addComment: (state, action: PayloadAction<AddComment>) => {
       const { postId, text, userId } = action.payload;
 
       const newComment: Comment = {
+        postId,
         cigaret: [],
         date: new Date().toISOString(),
         fire: [],
@@ -133,44 +129,36 @@ const postSlicer = createSlice({
         userId,
       };
 
-      const post = postAdapter.getSelectors().selectById(state.posts, postId);
-
-      if (!post) return;
-
-      commentAdapter.addOne(post.comments, newComment);
-      return { ...state };
+      commentAdapter.addOne(state.comment, newComment);
     },
     commentReaction: (state, action: PayloadAction<CommentReaction>) => {
-      const { postId, reaction, userId, commentId } = action.payload;
-
-      const post = postAdapter.getSelectors().selectById(state.posts, postId);
-
-      if (!post) return;
+      const { reaction, userId, commentId } = action.payload;
 
       const comment = commentAdapter
         .getSelectors()
-        .selectById(post.comments, commentId);
+        .selectById(state.comment, commentId);
 
       if (!comment) return;
 
       const reactions = comment[reaction];
 
       if (reactions.includes(userId)) {
-        comment[reaction] = reactions.filter((user) => user !== userId);
+        commentAdapter.updateOne(state.comment, {
+          id: comment.id,
+          changes: { [reaction]: [...reactions.filter((id) => id !== userId)] },
+        });
       } else {
-        comment[reaction].push(userId);
+        commentAdapter.updateOne(state.comment, {
+          id: comment.id,
+          changes: { [reaction]: [...reactions, userId] },
+        });
       }
-      return { ...state };
     },
   },
 });
 
-const commentToCommentView = (
-  comment: Comment,
-  postId: string
-): CommentView => ({
+const commentToCommentView = (comment: Comment): CommentView => ({
   ...comment,
-  postId,
   reactions: (["cigaret", "fire", "like", "heart"] as Reactions[]).map(
     (key) => ({
       emoji: reactions[key],
@@ -181,19 +169,14 @@ const commentToCommentView = (
 });
 
 export const selectCommentViewById =
-  (commentId: string, postId: string) => (state: AppState) => {
-    const post = postAdapter
-      .getSelectors()
-      .selectById(state.post.posts, postId);
-    if (!post) return null;
-
+  (commentId: string) => (state: AppState) => {
     const comment = commentAdapter
       .getSelectors()
-      .selectById(post?.comments, commentId);
+      .selectById(state.post.comment, commentId);
 
     if (!comment) return null;
 
-    return commentToCommentView(comment, postId);
+    return commentToCommentView(comment);
   };
 
 export const { addComment, addPost, commentReaction, reaction } =

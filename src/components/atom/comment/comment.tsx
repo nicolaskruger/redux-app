@@ -3,7 +3,7 @@ import {
   CommentView,
   commentReaction,
   selectCommentViewById,
-} from "../../../features/post/postiSlicer";
+} from "../../../features/post/postSlicer";
 import { Reactions } from "../../../features/post/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { MouseEvent } from "react";
@@ -11,19 +11,18 @@ import { selectLoginUser } from "../../../features/login/loginSlice";
 
 type CommentComponentProps = {
   commentId: string;
-  postId: string;
 };
 
-const CommentComponent = ({ commentId, postId }: CommentComponentProps) => {
-  const comment = useSelector(selectCommentViewById(commentId, postId));
+const CommentComponent = ({ commentId }: CommentComponentProps) => {
+  const comment = useSelector(selectCommentViewById(commentId));
 
-  if (!comment) return <p>post not exist</p>;
+  if (!comment) return <p data-testid="p-comment-error">post not exist!!!</p>;
 
   const { date, reactions, text, id } = comment;
 
   const user = useSelector(selectLoginUser);
 
-  if (!user) return <p>user not found</p>;
+  if (!user) return <p data-testid="p-comment-error">user not logged!!!</p>;
 
   const { name, url } = user;
 
@@ -37,7 +36,6 @@ const CommentComponent = ({ commentId, postId }: CommentComponentProps) => {
       dispatch(
         commentReaction({
           commentId: id,
-          postId,
           reaction,
           userId: user.id,
         })

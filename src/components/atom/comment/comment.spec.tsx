@@ -11,7 +11,6 @@ import {
   postAdapter,
 } from "../../../features/post/postSlicer";
 import user from "@testing-library/user-event";
-import { loginWithId } from "../../../features/login/loginSlice";
 
 const comment: Comment = {
   postId: "0",

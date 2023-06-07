@@ -2,7 +2,11 @@ import { render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
 import store, { makeStore } from "../../../store";
 import { PostComponent } from "./post-component";
-import { addPost, postAdapter } from "../../../features/post/postSlicer";
+import {
+  addComment,
+  addPost,
+  postAdapter,
+} from "../../../features/post/postSlicer";
 import { loginWithId } from "../../../features/login/loginSlice";
 import user from "@testing-library/user-event";
 
@@ -60,7 +64,7 @@ describe("<PostComponent/>", () => {
 
     expect(p).toBeInTheDocument();
 
-    expect(p.textContent).toBe("post not found!!!");
+    expect(p.textContent).toBe("post not found !!!");
   });
   it("should react to a post", () => {
     renderPage();
@@ -91,5 +95,27 @@ describe("<PostComponent/>", () => {
     const p = screen.getByText("comment");
 
     expect(p).toBeInTheDocument();
+  });
+
+  it("show more elements when click on show more", () => {
+    const { store, post } = renderPage();
+
+    "_"
+      .repeat(6)
+      .split("")
+      .forEach((_) => {
+        store.dispatch(
+          addComment({ postId: post.id, text: "promise", userId: "aiko" })
+        );
+      });
+    const button = screen.getByTestId<HTMLButtonElement>(
+      "button-post-show-more"
+    );
+
+    expect(screen.getAllByText("promise")).toBe(5);
+
+    user.click(button);
+
+    expect(screen.getAllByText("promise")).toBe(6);
   });
 });

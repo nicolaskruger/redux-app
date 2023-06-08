@@ -5,7 +5,7 @@ export const USERS: User[] = [
     name: "Punpun",
     email: "punpun@email.com",
     id: "punpun",
-    url: "/user/punpun.png",
+    url: "/user/punpun.webp",
     password: "123",
   },
   {
@@ -13,13 +13,13 @@ export const USERS: User[] = [
     email: "aikoTanaka@email.com",
     id: "aiko",
     password: "123",
-    url: "/user/aiko.png",
+    url: "/user/aiko.webp",
   },
   {
     name: "Seki Masumi",
     email: "seki@email.com",
     id: "seki",
-    url: "/user/seki.png",
+    url: "/user/seki.webp",
     password: "123",
   },
   {
@@ -27,6 +27,6 @@ export const USERS: User[] = [
     email: "sachi@email.com",
     id: "sachi",
     password: "123",
-    url: "/user/aiko.png",
+    url: "/user/aiko.webp",
   },
 ];

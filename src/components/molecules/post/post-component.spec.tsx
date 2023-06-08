@@ -86,13 +86,17 @@ describe("<PostComponent/>", () => {
   it("should comment in the post", () => {
     renderPage();
 
-    const input = screen.getByTestId("input-post-comment");
+    const input = screen.getByTestId<HTMLTextAreaElement>("input-post-comment");
 
     user.type(input, "new comment add");
 
     const button = screen.getByTestId("button-post-comment");
 
+    expect(input.value).toBe("new comment add");
+
     user.click(button);
+
+    expect(input.value).toBe("");
 
     const p = screen.getByText("new comment add");
 

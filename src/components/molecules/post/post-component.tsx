@@ -63,6 +63,7 @@ export const PostComponent = ({ postId }: PostComponentProps) => {
         userId: user.id,
       })
     );
+    setNewComment("");
   };
 
   const handleShowMoreComments = (

@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { addPost, selectPostsIds } from "../../../features/post/postSlicer";
 import { selectLoginUser } from "../../../features/login/loginSlice";
+import style from "./blog-component.module.css";
 
 const BlogComponent = () => {
   const [text, setText] = useState("");
@@ -29,16 +30,16 @@ const BlogComponent = () => {
   };
 
   return (
-    <div>
+    <div className={style.container}>
       <ProfileHeader />
-      <form action="submit" onSubmit={handleSubmit}>
+      <form className={style.form} action="submit" onSubmit={handleSubmit}>
         <label htmlFor="post">Post</label>
-        <input
+        <textarea
+          className={style.textarea}
           value={text}
           onChange={(e) => setText(e.target.value)}
           data-testid="input-blog-post"
           id="post"
-          type="text"
         />
         <button type="submit" data-testid="button-blog-post">
           post
@@ -47,7 +48,7 @@ const BlogComponent = () => {
       <ul>
         {postIds.map((id) => (
           <li key={id} data-testid={`li-blog-post-${id}`}>
-            <PostComponent postId="id" />
+            <PostComponent postId={id} />
           </li>
         ))}
       </ul>

@@ -271,3 +271,10 @@ export const selectPostViewById = (postId: string) => (state: AppState) => {
 
   return postView;
 };
+
+export const selectPostsIds = (state: AppState) => {
+  return postAdapter
+    .getSelectors()
+    .selectAll(state.post.posts)
+    .map(({ id }) => id);
+};

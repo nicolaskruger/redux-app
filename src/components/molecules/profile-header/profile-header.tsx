@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { ProfileImg } from "../../atom/profile-img/profile-img";
 import { selectLoginUser } from "../../../features/login/loginSlice";
+import styles from "./profile-header.module.css";
 
 const ProfileHeader = () => {
   const user = useSelector(selectLoginUser);
@@ -10,10 +11,10 @@ const ProfileHeader = () => {
   const { email, name, url } = user;
 
   return (
-    <div>
+    <div className={styles.container}>
       <ProfileImg size={100} src={url} alt={name} />
-      <div>
-        <p>{name}</p>
+      <div className={styles.infoContainer}>
+        <p className={styles.bold}>{name}</p>
         <p>{email}</p>
       </div>
     </div>

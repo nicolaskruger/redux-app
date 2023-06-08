@@ -6,10 +6,13 @@
     word-wrap: break-word;
 }
 
-.ulReaction{
+.ulReaction, .ulComment{
     list-style-type: none;
     margin: 0;
     padding: 0;
+}
+.ulComment{
+    margin-left: 32px;
 }
 .ulReaction{
     display: flex;
@@ -17,4 +20,20 @@
 }
 .buttonReaction{
     cursor: pointer;
+}
+
+.formComment{
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.textAreaComment{
+    width: 100%;
+    resize: none;
+}
+
+.ulComment{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }

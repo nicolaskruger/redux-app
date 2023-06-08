@@ -97,16 +97,20 @@ export const PostComponent = ({ postId }: PostComponentProps) => {
           </li>
         ))}
       </ul>
-      <form onSubmit={handleSubmitComment} action="submit">
-        <input
+      <form
+        className={styles.formComment}
+        onSubmit={handleSubmitComment}
+        action="submit"
+      >
+        <textarea
+          className={styles.textAreaComment}
           data-testid="input-post-comment"
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
-          type="text"
         />
         <button data-testid="button-post-comment">comment</button>
       </form>
-      <ul>
+      <ul className={styles.ulComment}>
         {commentIds.map((commentId) => (
           <li key={commentId}>
             <CommentComponent commentId={commentId} />

@@ -11,6 +11,8 @@ import { Reactions } from "../../../features/post/constants";
 import { FormEvent, MouseEvent, useState } from "react";
 import { useAppDispatch } from "../../../store";
 import { CommentComponent } from "../../atom/comment/comment";
+import { ProfileImg } from "../../atom/profile-img/profile-img";
+import styles from "./post-component.module.css";
 
 type PostComponentProps = {
   postId: string;
@@ -76,16 +78,17 @@ export const PostComponent = ({ postId }: PostComponentProps) => {
     <div>
       <div>
         <div>
-          <img src={url} alt={name} />
-          <p>{name}</p>
+          <ProfileImg size={50} src={url} alt={name} />
+          <p className={styles.name}>{name}</p>
         </div>
-        <p>{text}</p>
+        <p className={styles.text}>{text}</p>
         <p>{formatDistance(new Date(date), new Date(), { addSuffix: true })}</p>
       </div>
-      <ul>
+      <ul className={styles.ulReaction}>
         {reactions.map(({ emoji, times, reaction }) => (
           <li key={emoji}>
             <button
+              className={styles.buttonReaction}
               data-testid={`button-post-${reaction}`}
               onClick={handleClickReaction(reaction)}
             >

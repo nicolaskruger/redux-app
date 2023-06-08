@@ -45,9 +45,9 @@ const BlogComponent = () => {
           post
         </button>
       </form>
-      <ul>
+      <ul className={style.ul}>
         {postIds.map((id) => (
-          <li key={id} data-testid={`li-blog-post-${id}`}>
+          <li className={style.li} key={id} data-testid={`li-blog-post-${id}`}>
             <PostComponent postId={id} />
           </li>
         ))}

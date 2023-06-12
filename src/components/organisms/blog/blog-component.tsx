@@ -13,6 +13,8 @@ const BlogComponent = () => {
 
   const postIds = useAppSelector(selectPostsIds);
 
+  const loadMorePost = true;
+
   if (!user) return <></>;
 
   const dispatch = useAppDispatch();
@@ -52,6 +54,11 @@ const BlogComponent = () => {
           </li>
         ))}
       </ul>
+      <div className={style.ul}>
+        {loadMorePost && (
+          <button data-testid={"button-blog-load-more"}>show more posts</button>
+        )}
+      </div>
     </div>
   );
 };

@@ -4,7 +4,7 @@ import { AppState, makeStore } from "../../../store";
 import { Provider } from "react-redux";
 import { BlogComponent } from "./blog-component";
 import user from "@testing-library/user-event";
-import { postAdapter } from "../../../features/post/postSlicer";
+import { addPost, postAdapter } from "../../../features/post/postSlicer";
 
 const selectAllPosts = (state: AppState) => {
   return postAdapter.getSelectors().selectAll(state.post.posts);
@@ -46,5 +46,37 @@ describe("<PostComponent/>", () => {
     expect(input.value).toBe("");
     const post1 = selectAllPosts(store.getState());
     expect(post1.length).toBe(1);
+  });
+
+  it("should load more posts", () => {
+    const store = makeStore();
+
+    "-"
+      .repeat(6)
+      .split("")
+      .forEach((v) => {
+        store.dispatch(
+          addPost({
+            text: "promise",
+            userId: "punpun",
+          })
+        );
+      });
+
+    render(
+      <Provider store={store}>
+        <BlogComponent />
+      </Provider>
+    );
+
+    const button = screen.getByTestId<HTMLButtonElement>(
+      "button-blog-load-more"
+    );
+
+    expect(screen.getAllByText("promise").length).toBe(5);
+
+    user.click(button);
+
+    expect(screen.getAllByText("promise").length).toBe(6);
   });
 });

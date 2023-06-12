@@ -69,7 +69,7 @@ describe("<CommentComponent/>", () => {
   it("should render correctly", () => {
     beforeChosen();
     expect(screen.getByTestId<HTMLImageElement>("img-comment-user").src).toBe(
-      "http://localhost/user/punpun.png"
+      "http://localhost/user/punpun.webp"
     );
     expect(
       screen.getByTestId<HTMLParagraphElement>("p-comment-user-name")

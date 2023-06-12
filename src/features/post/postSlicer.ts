@@ -190,6 +190,9 @@ const postSlicer = createSlice({
         });
       }
     },
+    showMorePosts: (state) => {
+      state.showSize += 5;
+    },
   },
 });
 
@@ -236,6 +239,7 @@ export const {
   commentReaction,
   reaction,
   showMoreComments,
+  showMorePosts,
 } = postSlicer.actions;
 
 export const postReducer = postSlicer.reducer;
@@ -272,9 +276,15 @@ export const selectPostViewById = (postId: string) => (state: AppState) => {
   return postView;
 };
 
+export const selectShowMorePost = (state: AppState) => {
+  const postSize = state.post.posts.ids.length;
+  return state.post.showSize < postSize;
+};
+
 export const selectPostsIds = (state: AppState) => {
   return postAdapter
     .getSelectors()
     .selectAll(state.post.posts)
+    .slice(0, state.post.showSize)
     .map(({ id }) => id);
 };

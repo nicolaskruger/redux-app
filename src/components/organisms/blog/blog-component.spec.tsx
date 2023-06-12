@@ -63,6 +63,8 @@ describe("<PostComponent/>", () => {
         );
       });
 
+    store.dispatch(loginWithId("punpun"));
+
     render(
       <Provider store={store}>
         <BlogComponent />

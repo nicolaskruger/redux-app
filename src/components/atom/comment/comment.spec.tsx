@@ -2,14 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { makeStore } from "../../../store";
 import { CommentComponent } from "./comment";
-import {
-  Comment,
-  Post,
-  addComment,
-  addPost,
-  commentAdapter,
-  postAdapter,
-} from "../../../features/post/postSlicer";
+import { Comment, Post } from "../../../features/post/postSlicer";
 import user from "@testing-library/user-event";
 
 const comment: Comment = {
